@@ -1,0 +1,35 @@
+1.新建Activity
+Generate Layout File 自动生成对应的布局文件
+Launcher Act 自动将当前活动设置为当前项目的主活动
+2.添加menu
+新建一个menu文件，添加item，设置id和title
+在Activity中重新onCreateOptionsMenu(Menu menu) 通过getMenuInflater().inflate(R.menu.main, menu)
+重新onOptionsItemSelected(MenuItem item)方法实现菜单响应事件，通过函数item.getItemId()获得当前选择的itemId
+3.活动间的跳转
+显示Intent
+新建一个Activity
+在MainActivity中添加:
+Intent intent = new Intent(this, SecondActivity.class);
+startActivity(intent)
+隐式Intent
+在androidMainfest.xml活动添加:
+<intent-filter>
+    <action android:name="com.example.chapter2.ACTION_START"/>
+    <category android:name="android.intent.category.DEFAULT"/>
+    <category android:name="com.example.chapter2.MY_CATEGORY"/>
+</intent-filter>
+在MainActivity中添加:
+Intent intent = new Intent("com.example.chapter2.ACTION_START");
+intent.addCategory("com.example.chapter2.MY_CATEGORY");
+startActivity(intent);
+隐式Intent更多用法
+Intent intent = new Intent(Intent.ACTION_VIEW);
+intent.setData(Uri.parse("http://www.baidu.com"));
+startActivity(intent);
+
+活动的启动方式
+在AndroidManifest.xml 活动下设置参数：android:launchMode= "singleTop"
+standard模式 每次该活动启动都会创建新活动
+singleTop模式 活动启动时判断返回栈的栈顶是不是该活动，是的话直接使用，否则创建新活动
+singleTask模式 每次该活动启动会检查返回栈中是否存在，如果存在，则会将直接使用改实例，并将这个活动之上的所有活动全部出栈，如果不存在则创建新活动
+singleInstance模式 此活动启用会用一个新的返回栈来管理
