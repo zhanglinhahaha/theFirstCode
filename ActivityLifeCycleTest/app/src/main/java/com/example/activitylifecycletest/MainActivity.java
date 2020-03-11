@@ -24,11 +24,6 @@ public class MainActivity extends AppCompatActivity {
             Log.d(TAG, temp);
         }
 
-        Intent intent =getIntent();
-        if(intent != null) {
-            Toast.makeText(this,intent.getStringExtra("data"),Toast.LENGTH_SHORT).show();
-        }
-
         Button toDialog = (Button) findViewById(R.id.dialog);
         Button toNormal = (Button) findViewById(R.id.normal);
         toDialog.setOnClickListener(new View.OnClickListener() {
