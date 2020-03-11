@@ -3,10 +3,12 @@ package com.example.providertest;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.ContentValues;
+import android.database.ContentObserver;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -16,10 +18,25 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     private String newId;
 
+    //监听回调函数
+    private ContentObserver changeObserver =
+            new ContentObserver(new Handler()) {
+                @Override
+                public void onChange(boolean selfChange) {
+                    Log.d(TAG, "onChange: ");
+                }
+            };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //注册监听，监听book数据表
+        //需要在DatabaseProvider中重写的crud函数中，添加getContext().getContentResolver().notifyChange(uri,null);
+        this.getContentResolver().registerContentObserver(
+                Uri.parse("content://com.example.databasetest.provider/book"),
+                true, changeObserver);
 
         //insert data
         Button addData = (Button) findViewById(R.id.add_data);
