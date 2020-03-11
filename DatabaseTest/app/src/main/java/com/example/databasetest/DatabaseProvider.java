@@ -96,6 +96,7 @@ public class DatabaseProvider extends ContentProvider {
                 break;
             default:break;
         }
+        getContext().getContentResolver().notifyChange(uri,null);
         return uri1;
     }
 
@@ -165,6 +166,7 @@ public class DatabaseProvider extends ContentProvider {
                 break;
             default:break;
         }
+        getContext().getContentResolver().notifyChange(uri,null);
         return updatedRows;
     }
 }
