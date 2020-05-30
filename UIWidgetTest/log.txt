@@ -1,0 +1,6 @@
+match_parent 让当前控件的大小和父布局的大小一样
+wrap_content 让当前控件的大小能够刚好包含里面的内容
+约束布局
+在app/build.gradle下添加依赖
+implementation 'com.android.support.constraint:constraint-layout:1.1.3'
+
