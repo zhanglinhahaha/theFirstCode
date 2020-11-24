@@ -1,0 +1,219 @@
+##RecyclerView
+RecyclerView属于新增的控件，为了在所以的Android版本上都能使用，而RecyclerView定义在support库中。
+所以想要使用RecyclerView这个控件，需要添加相应的依赖库。
+### 基本用法
+在布局中添加代码
+<androidx.recyclerview.widget.RecyclerView
+    android:id="@+id/recycler_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"/>
+#### 对象类
+class Team {
+    private String name;
+    private int imageId;
+
+    public Team(String name, int imageId) {
+        this.name = name;
+        this.imageId = imageId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getImageId() {
+        return imageId;
+    }
+}
+#### item布局
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="5dp">
+
+    <ImageView
+        android:id="@+id/team_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"/>
+
+    <TextView
+        android:id="@+id/team_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="left"
+        android:layout_marginLeft="10dp"/>
+
+</LinearLayout>
+
+<!--水平翻滚效果-->
+<!--<?xml version="1.0" encoding="utf-8"?>-->
+<!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--android:orientation="vertical"-->
+<!--android:layout_width="100dp"-->
+<!--android:layout_height="wrap_content">-->
+
+<!--<ImageView-->
+    <!--android:id="@+id/team_image"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_gravity="center_horizontal"/>-->
+
+<!--<TextView-->
+    <!--android:id="@+id/team_name"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_gravity="center_horizontal"-->
+    <!--android:layout_marginLeft="10dp"/>-->
+
+<!--</LinearLayout>-->
+
+<!--垂直滑动效果-->
+<!--<?xml version="1.0" encoding="utf-8"?>-->
+<!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--android:layout_width="match_parent"-->
+<!--android:layout_height="wrap_content">-->
+
+<!--<ImageView-->
+    <!--android:id="@+id/team_image"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content" />-->
+
+<!--<TextView-->
+    <!--android:id="@+id/team_name"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_gravity="center_vertical"-->
+    <!--android:layout_marginLeft="10dp"/>-->
+
+<!--</LinearLayout>-->
+#### 适配器类
+public class TeamAdapter extends RecyclerView.Adapter<TeamAdapter.ViewHolder>  {
+    private static final String TAG = "TeamAdapter";
+    private List<Team> mTeamList;
+
+    public class ViewHolder extends RecyclerView.ViewHolder {
+
+        //实现点击事件
+        View teamView;
+
+        ImageView teamImage;
+        TextView teamName;
+
+        public ViewHolder(@NonNull View itemView) {
+            super(itemView);
+            teamView = itemView;
+            teamImage = (ImageView) itemView.findViewById(R.id.team_image);
+            teamName = (TextView) itemView.findViewById(R.id.team_name);
+        }
+    }
+
+    public TeamAdapter(List<Team> teamList) {
+        mTeamList = teamList;
+    }
+
+    @NonNull
+    @Override
+    public TeamAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(
+                R.layout.team_item,parent,false);
+        final ViewHolder holder = new ViewHolder(view);
+
+        holder.teamView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int pos = holder.getAdapterPosition();
+                Team team = mTeamList.get(pos);
+                Log.d(TAG, "onClick: "+team.getName());
+            }
+        });
+        holder.teamImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int pos = holder.getAdapterPosition();
+                Team team = mTeamList.get(pos);
+                Log.d(TAG, "onClick: "+team.getName());
+            }
+        });
+
+        return holder;
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull TeamAdapter.ViewHolder holder, int position) {
+        Team team = mTeamList.get(position);
+        holder.teamImage.setImageResource(team.getImageId());
+        holder.teamName.setText(team.getName());
+    }
+
+    @Override
+    public int getItemCount() {
+        return mTeamList.size();
+    }
+
+}
+#### 主活动类
+public class MainActivity extends AppCompatActivity {
+
+    private List<Team> teamList = new ArrayList<>();
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        initTeam();
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+
+        /*
+        //实现垂直滑动效果
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        //实现水平滑动效果
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        */
+        //实现网络布局,第一个参数是布局的列数，第二个参数是排列方向
+        StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(
+                1,StaggeredGridLayoutManager.VERTICAL);
+
+        recyclerView.setLayoutManager(layoutManager);
+        TeamAdapter adapter = new TeamAdapter(teamList);
+        recyclerView.setAdapter(adapter);
+    }
+
+    private void initTeam() {
+        Team rng = new Team("RNG",R.drawable.rng);
+        teamList.add(rng);
+        Team ig = new Team("IG",R.drawable.ig);
+        teamList.add(ig);
+        Team fpx = new Team("FPX",R.drawable.rng);
+        teamList.add(fpx);
+        Team skt = new Team("SKT",R.drawable.ig);
+        teamList.add(skt);
+        Team grf = new Team("GRF",R.drawable.rng);
+        teamList.add(grf);
+        Team dwg = new Team("DWG",R.drawable.ig);
+        teamList.add(dwg);
+        Team g2 = new Team("G2",R.drawable.rng);
+        teamList.add(g2);
+        Team fnc = new Team("FNC",R.drawable.ig);
+        teamList.add(fnc);
+        Team spy = new Team("SPY",R.drawable.rng);
+        teamList.add(spy);
+        Team tl = new Team("TL",R.drawable.ig);
+        teamList.add(tl);
+        Team c9 = new Team("C9",R.drawable.rng);
+        teamList.add(c9);
+        Team cg = new Team("CG",R.drawable.ig);
+        teamList.add(cg);
+        Team hka = new Team("HKA",R.drawable.rng);
+        teamList.add(hka);
+        Team ahq = new Team("AHQ",R.drawable.ig);
+        teamList.add(ahq);
+        Team gam = new Team("GAM",R.drawable.rng);
+        teamList.add(gam);
+        Team jt = new Team("JT",R.drawable.ig);
+        teamList.add(jt);
+    }
+}

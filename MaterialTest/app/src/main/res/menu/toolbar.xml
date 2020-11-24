@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app = "http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/backup"
+        android:icon="@drawable/back"
+        android:title="Backup"
+        app:showAsAction="always"/>
+
+    <item
+        android:id="@+id/delete"
+        android:icon="@drawable/delete"
+        android:title="Delete"
+        app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/settings"
+        android:icon="@drawable/settings"
+        android:title="Settings"
+        app:showAsAction="never"/>
+
+</menu>
+<!--always 图标总是显示 ifRoom 屏幕空间足够的情况下显示 never 永远只显示在菜单中-->
