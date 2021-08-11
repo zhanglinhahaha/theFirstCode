@@ -124,15 +124,24 @@ public class MainActivity extends AppCompatActivity {
                 }
                 break;
             case CHOOSE_PHOTO:
-                //判断手机系统版本号 系统4.4
                 if(resultCode == RESULT_OK) {
-                    if(Build.VERSION.SDK_INT >= 19) {
-                        Log.d(TAG, "onActivityResult: >19");
-                        handleImageOnKitKat(data);
-                    }else {
-                        Log.d(TAG, "onActivityResult: <19");
-                        handleImageBeforeKitKat(data);
+                    try {
+                        Bitmap bitmap = BitmapFactory.decodeStream(
+                                getContentResolver().openInputStream(data.getData()));
+                        Log.d(TAG, "onActivityResult: " + data.getData());
+                        picture.setImageBitmap(bitmap);
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
                     }
+                    //type 2 , could delete, too complex.
+                    //判断手机系统版本号 系统4.4
+//                    if(Build.VERSION.SDK_INT >= 19) {
+//                        Log.d(TAG, "onActivityResult: >19");
+//                        handleImageOnKitKat(data);
+//                    }else {
+//                        Log.d(TAG, "onActivityResult: <19");
+//                        handleImageBeforeKitKat(data);
+//                    }
                 }
                 break;
                 default:break;
