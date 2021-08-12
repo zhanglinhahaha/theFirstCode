@@ -2,6 +2,7 @@ package com.example.networktest;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -28,6 +29,7 @@ import java.io.StringReader;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.parsers.SAXParserFactory;
@@ -47,42 +49,89 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Button sendRequest = (Button) findViewById(R.id.send_request);
+        Button okHttpSendRequest = (Button) findViewById(R.id.okHttp_send_request);
+        Button httpUrlSendRequest = (Button) findViewById(R.id.httpUrlConnection_send_request);
         responseText = (TextView) findViewById(R.id.response_text);
-        sendRequest.setOnClickListener(this);
+        okHttpSendRequest.setOnClickListener(this);
+        httpUrlSendRequest.setOnClickListener(this);
+
+        Button xmlPull = (Button) findViewById(R.id.xml_pull);
+        xmlPull.setOnClickListener(this);
+        Button xmlSAX = (Button) findViewById(R.id.xml_sax);
+        xmlSAX.setOnClickListener(this);
+
+        Button json_gson = (Button) findViewById(R.id.json_gson);
+        json_gson.setOnClickListener(this);
+        Button json_josnobject = (Button) findViewById(R.id.json_josnobject);
+        json_josnobject.setOnClickListener(this);
     }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public void onClick(View view) {
-        if(view.getId() == R.id.send_request) {
-//            way1
-//            sendRequestWithHttpURLConnection();
-//            way2
-            String address = "https://www.baidu.com";
-//            HttpUtil.sendRequestWithHttpURLConnection(address, new HttpUtil.HttpCallbackListener() {
-//                @Override
-//                public void onFinish(String response) {
-//                    showResponse(response);
-//                }
-//
-//                @Override
-//                public void onError(Exception e) { }
-//            });
+        String address = "https://www.baidu.com";
+        String result = null;
+        switch (view.getId()) {
+            case R.id.okHttp_send_request:
+                HttpUtil.sendOKHttpRequest(address, new okhttp3.Callback() {
+                    @Override
+                    public void onFailure(Call call, IOException e) { }
 
-//            使用okhttp需要先添加依赖
-//            way1
-//            sendRequestWithOKHttp();
-//            way2
-            HttpUtil.sendOKHttpRequest(address, new okhttp3.Callback() {
-                @Override
-                public void onFailure(Call call, IOException e) { }
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+                        String responseData = response.body().string();
+                        showResponse(responseData);
+                    }
+                });
+                break;
+            case R.id.httpUrlConnection_send_request:
+                HttpUtil.sendRequestWithHttpURLConnection(address, new HttpUtil.HttpCallbackListener() {
+                    @Override
+                    public void onFinish(String response) {
+                        showResponse(response);
+                    }
 
-                @Override
-                public void onResponse(Call call, Response response) throws IOException {
-                    String responseData = response.body().string();
-                    showResponse(responseData);
+                    @Override
+                    public void onError(Exception e) { }
+                });
+                break;
+            case R.id.xml_pull:
+            case R.id.xml_sax:
+                try {
+                    InputStream is = getAssets().open("test.xml");
+                    int length = is.available();
+                    byte[]  buffer = new byte[length];
+                    is.read(buffer);
+                    result =  new String(buffer, "utf8");
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-            });
+                if(view.getId() == R.id.xml_pull) {
+                    parseXMLWithPull(result);
+                }else {
+                    parseXMLWithSAX(result);
+                }
+                break;
+            case R.id.json_gson:
+            case R.id.json_josnobject:
+                try {
+                    InputStream is = getAssets().open("test.json");
+                    int length = is.available();
+                    byte[]  buffer = new byte[length];
+                    is.read(buffer);
+                    result =  new String(buffer, "utf8");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                if(view.getId() == R.id.json_josnobject) {
+                    parseJSONWithJSONObject(result);
+                }else {
+                    parseJSONWithGSON(result);
+                }
+                break;
+            default:
+                Log.d(TAG, "onClick: Error");
+                break;
         }
     }
 
@@ -174,6 +223,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void showResponse(final String response) {
+        // Android 不允许子线程中进行 UI 操作，需要利用这个 runOnUiThread 将线程切换到主线程。
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -186,7 +236,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         try {
             SAXParserFactory factory = SAXParserFactory.newInstance();
             XMLReader xmlReader = factory.newSAXParser().getXMLReader();
-            ContentHandler handler = new ContentHandler();
+            ContentHandler handler = new ContentHandler(new ContentHandler.SAXListener() {
+                @Override
+                public void onEndDocument(String res) {
+                    showResponse(res);
+                }
+            });
             xmlReader.setContentHandler(handler);
             xmlReader.parse(new InputSource(new StringReader(xmlData)));
         }catch (Exception e) {
@@ -195,23 +250,33 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void parseXMLWithPull(String xmlData) {
+        Log.d(TAG, "parseXMLWithPull() called with: xmlData = [" + xmlData + "]");
+        StringBuilder res = new StringBuilder();
         try {
             XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
             XmlPullParser xmlPullParser = factory.newPullParser();
             xmlPullParser.setInput(new StringReader(xmlData));
             int eventType = xmlPullParser.getEventType();
             String id = "";
+            String name = "";
+            String version = "";
             while (eventType != XmlPullParser.END_DOCUMENT) {
                 String nodeName = xmlPullParser.getName();
                 switch (eventType) {
                     case XmlPullParser.START_TAG:
                         if("id".equals(nodeName)) {
                             id = xmlPullParser.nextText();
+                        }else if("name".equals(nodeName)) {
+                            name = xmlPullParser.nextText();
+                        }else if("version".equals(nodeName)) {
+                            version = xmlPullParser.nextText();
                         }
                         break;
                     case XmlPullParser.END_TAG:
                         if("app".equals(nodeName)) {
                             Log.d(TAG, "parseXMLWithPull: " + id);
+                            String item = id + name + version + "\n";
+                            res.append(item);
                         }
                         break;
                     default:break;
@@ -221,16 +286,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }catch (Exception e) {
             e.printStackTrace();
         }
+        showResponse(res.toString());
     }
 
     private void parseJSONWithJSONObject(String jsonData) {
         try {
             JSONArray jsonArray = new JSONArray(jsonData);
+            StringBuilder res = new StringBuilder();
             for(int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
                 String id = jsonObject.getString("id");
-                Log.d(TAG, "parseJSONWithJSONObject: " + id);
+                String version = jsonObject.getString("version");
+                String name = jsonObject.getString("name");
+                res.append(id);
+                res.append(version);
+                res.append(name);
+                res.append("\n");
             }
+            showResponse(res.toString());
         }catch (Exception e) {
             e.printStackTrace();
         }
@@ -240,8 +313,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Gson gson = new Gson();
         List<App> appList = gson.fromJson(jsonData, new TypeToken<List<App>>()
         {}.getType());
+        StringBuilder res = new StringBuilder();
         for(App app : appList) {
-            Log.d(TAG, "parseJSONWithGSON: " + app.getId());
+            res.append(app);
+            res.append("\n");
         }
+        showResponse(res.toString());
     }
 }

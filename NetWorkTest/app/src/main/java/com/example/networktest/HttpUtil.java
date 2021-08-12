@@ -14,14 +14,14 @@ import okhttp3.Request;
  */
 public class HttpUtil {
 
-    public static void sendRequestWithHttpURLConnection(String address, final
+    public static void sendRequestWithHttpURLConnection(final String address, final
             HttpCallbackListener listener) {
         new Thread(new Runnable() {
             @Override
             public void run() {
                 HttpURLConnection connection =null;
                 try {
-                    URL url = new URL("https://www.baidu.com");
+                    URL url = new URL(address);
                     connection = (HttpURLConnection) url.openConnection();
                     connection.setRequestMethod("GET");
                     connection.setConnectTimeout(8000);//连接超时

@@ -4,12 +4,63 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <Button
-        android:id="@+id/send_request"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Send Request"
-        android:textAllCaps="false"/>
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/httpUrlConnection_send_request"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="HttpURLConnection Send Request"
+            android:textAllCaps="false"/>
+
+        <Button
+            android:id="@+id/okHttp_send_request"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="OkHttp Send Request"
+            android:textAllCaps="false"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/xml_pull"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="xml for pull"
+            android:textAllCaps="false"/>
+
+        <Button
+            android:id="@+id/xml_sax"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="xml for SAX"
+            android:textAllCaps="false"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/json_josnobject"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Json for JOSNObject"
+            android:textAllCaps="false"/>
+
+        <Button
+            android:id="@+id/json_gson"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Json for GSON"
+            android:textAllCaps="false"/>
+    </LinearLayout>
+
 
     <ScrollView
         android:layout_width="match_parent"
