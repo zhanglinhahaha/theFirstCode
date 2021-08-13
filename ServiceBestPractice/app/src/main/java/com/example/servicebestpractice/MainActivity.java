@@ -42,7 +42,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         pauseDownload.setOnClickListener(this);
         cancelDownload.setOnClickListener(this);
         Intent intent = new Intent(this, DownloadService.class);
-        startService(intent);
         bindService(intent, connection, BIND_AUTO_CREATE);
         if(ContextCompat.checkSelfPermission(MainActivity.this,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {

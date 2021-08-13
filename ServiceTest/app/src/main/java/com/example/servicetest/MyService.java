@@ -21,8 +21,8 @@ public class MyService extends Service {
 
     class DownloadBinder extends Binder {
 
-        public void stratDownload() {
-            Log.d(TAG, "stratDownload: ");
+        public void startDownload() {
+            Log.d(TAG, "startDownload: ");
         }
 
         public int getProgress() {
@@ -56,7 +56,7 @@ public class MyService extends Service {
                 .setContentText("This is content text")
                 .setWhen(System.currentTimeMillis())
                 .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentIntent(pendingIntent)
+                .setContentIntent(pendingIntent) //设置点击后跳转的 Activity
                 .build();
         startForeground(1, notification);
     }
@@ -69,7 +69,7 @@ public class MyService extends Service {
             public void run() {
                 Log.d(TAG, "run: "+ Thread.currentThread().getId());
                 //处理具体的逻辑
-                stopSelf();
+//                stopSelf();
             }
         }).start();
         return super.onStartCommand(intent, flags, startId);

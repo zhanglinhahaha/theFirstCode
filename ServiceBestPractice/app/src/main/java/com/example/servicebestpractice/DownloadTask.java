@@ -2,6 +2,7 @@ package com.example.servicebestpractice;
 
 import android.os.AsyncTask;
 import android.os.Environment;
+import android.util.Log;
 
 import java.io.File;
 import java.io.IOException;
@@ -81,6 +82,7 @@ public class DownloadTask extends AsyncTask<String, Integer, Integer> {
                         savedFile.write(b, 0, len);
                         int progress = (int) ((total + downloadedLength) * 100 / contentLength);
                         publishProgress(progress);
+                        Thread.sleep(100);
                     }
                 }
                 response.body().close();

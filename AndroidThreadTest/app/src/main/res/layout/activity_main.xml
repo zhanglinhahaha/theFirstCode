@@ -10,6 +10,14 @@
         android:textAllCaps="false"
         android:text="Change Text"/>
 
+    <Button
+        android:id="@+id/start_asynctask"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/change_text"
+        android:textAllCaps="false"
+        android:text="Start AsyncTask"/>
+
     <TextView
         android:id="@+id/text"
         android:layout_width="wrap_content"

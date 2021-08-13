@@ -19,7 +19,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         @Override
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
             downloadBinder = (MyService.DownloadBinder) iBinder;
-            downloadBinder.stratDownload();
+            downloadBinder.startDownload();
             downloadBinder.getProgress();
         }
 
