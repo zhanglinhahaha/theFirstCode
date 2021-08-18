@@ -21,23 +21,3 @@ public class Fruit {
         return imageId;
     }
 }
-
-/*
- public class Record {
-
-    //Consumption of type, which is one of eat, close, home, or others.
-    private int type;
-
-    //Consumption of content
-    private String content;
-
-    //Consumption of price
-    private int price;
-
-    //Consumption of date
-    private String date;
-
-    //Consumption of name
-    private String name;
-}
-*/

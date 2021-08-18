@@ -51,22 +51,22 @@ public class MainActivity extends AppCompatActivity {
         mLocationClient.registerLocationListener(new MyLocationListener());
         positionText = (TextView) findViewById(R.id.position_text_view);
         List<String> permissionList = new ArrayList<>();
-        if(ContextCompat.checkSelfPermission(MainActivity.this, android.Manifest.
+        if (ContextCompat.checkSelfPermission(MainActivity.this, android.Manifest.
                 permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             permissionList.add(android.Manifest.permission.ACCESS_FINE_LOCATION);
         }
-        if(ContextCompat.checkSelfPermission(MainActivity.this, android.Manifest.
+        if (ContextCompat.checkSelfPermission(MainActivity.this, android.Manifest.
                 permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
             permissionList.add(android.Manifest.permission.READ_PHONE_STATE);
         }
-        if(ContextCompat.checkSelfPermission(MainActivity.this, android.Manifest.
+        if (ContextCompat.checkSelfPermission(MainActivity.this, android.Manifest.
                 permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             permissionList.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
         }
-        if(!permissionList.isEmpty()) {
+        if (!permissionList.isEmpty()) {
             String[] permissions = permissionList.toArray(new String[permissionList.size()]);
             ActivityCompat.requestPermissions(MainActivity.this, permissions, 1);
-        }else {
+        } else {
             requestLocation();
         }
     }
@@ -143,18 +143,17 @@ public class MainActivity extends AppCompatActivity {
             StringBuilder currentPosition = new StringBuilder();
             currentPosition.append("纬度：").append(bdLocation.getLatitude()).append("\n");
             currentPosition.append("经度：").append(bdLocation.getLongitude()).append("\n");
-            currentPosition.append("国家：").append(bdLocation.getCountry()).append("\n");
-            currentPosition.append("省：").append(bdLocation.getProvince()).append("\n");
-            currentPosition.append("市：").append(bdLocation.getCity()).append("\n");
-            currentPosition.append("区：").append(bdLocation.getDistrict()).append("\n");
-            currentPosition.append("街道：").append(bdLocation.getStreet()).append("\n");
+            currentPosition.append(bdLocation.getCountry()).append("\t");
+            currentPosition.append(bdLocation.getProvince()).append("\t");
+            currentPosition.append(bdLocation.getCity()).append("\t");
+            currentPosition.append(bdLocation.getDistrict()).append("\t");
+            currentPosition.append(bdLocation.getStreet()).append("\n");
             currentPosition.append("定位方式：");
             if(bdLocation.getLocType() == BDLocation.TypeGpsLocation) {
                 currentPosition.append("GPS");
             }else if(bdLocation.getLocType() == BDLocation.TypeNetWorkLocation) {
                 currentPosition.append("NetWork");
             }
-
             navigateTo(bdLocation);
             positionText.setText(currentPosition);
         }

@@ -5,7 +5,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:name="org.litepal.LitePalApplication"
+        android:name="com.example.weather.MyApplication"
         android:allowBackup="true"
         android:icon="@mipmap/we"
         android:label="@string/app_name"

@@ -179,7 +179,7 @@ public class ChooseAreaFragment extends Fragment {
 
     private void queryFromServer(String address, final String type) {
         showProgressDialog();
-        LogUtil.d(TAG,type);
+        LogUtil.d(TAG,address + ", " + type);
         HttpUtil.sendOkHttpRequest(address, new Callback() {
             @Override
             public void onResponse(Call call, Response response) throws IOException {

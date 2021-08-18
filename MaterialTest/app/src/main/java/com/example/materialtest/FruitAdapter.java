@@ -57,8 +57,8 @@ public class FruitAdapter extends RecyclerView.Adapter<FruitAdapter.ViewHolder> 
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int positon = holder.getAdapterPosition();
-                Fruit fruit = mFruitList.get(positon);
+                int position = holder.getAdapterPosition();
+                Fruit fruit = mFruitList.get(position);
                 Intent intent = new Intent(mContext, FruitActivity.class);
                 intent.putExtra(FruitActivity.FRUIT_NAME,fruit.getName());
                 intent.putExtra(FruitActivity.FRUIT_IMAGE_ID,fruit.getImageId());

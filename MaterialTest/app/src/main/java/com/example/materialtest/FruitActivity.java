@@ -28,7 +28,7 @@ public class FruitActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fruit);
         Intent intent = getIntent();
-        String furitName = intent.getStringExtra(FRUIT_NAME);
+        String fruitName = intent.getStringExtra(FRUIT_NAME);
         int fruitImageId = intent.getIntExtra(FRUIT_IMAGE_ID, 0);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar1);
         CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout)
@@ -40,9 +40,9 @@ public class FruitActivity extends AppCompatActivity {
         if(actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
-        collapsingToolbarLayout.setTitle(furitName);
+        collapsingToolbarLayout.setTitle(fruitName);
         Glide.with(this).load(fruitImageId).into(fruitImageView);
-        String fruitContent = generateFruitContent(furitName);
+        String fruitContent = generateFruitContent(fruitName);
         fruitContentText.setText(fruitContent);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fruit_fab);

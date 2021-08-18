@@ -27,6 +27,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -74,6 +76,14 @@ public class MainActivity extends AppCompatActivity {
                 }
                 mDrawerLayout.closeDrawers();
                 return true;
+            }
+        });
+
+        CircleImageView circleImageView = (CircleImageView) navigationView.getHeaderView(0).findViewById(R.id.icon_image);
+        circleImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(MainActivity.this, "circleImageView", Toast.LENGTH_SHORT).show();
             }
         });
 
